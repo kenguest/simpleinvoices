@@ -1,5 +1,4 @@
 <?php
-<script language="javascript" type="text/javascript" src="include/tiny-mce.conf.js"></script>
 include("./include/include_main.php");
 
 #get the invoice id
@@ -87,7 +86,8 @@ while ($billerArray = mysql_fetch_array($result_print_biller)) {
                 $b_custom_field2Field = $billerArray['b_custom_field2'];
                 $b_custom_field3Field = $billerArray['b_custom_field3'];
                 $b_custom_field4Field = $billerArray['b_custom_field4'];
-
+                $b_co_footerField = $billerArray['b_co_footer'];
+                $b_co_logoField = $billerArray['b_co_logo'];
 };
 
 
@@ -184,15 +184,21 @@ while ($Array_defaults = mysql_fetch_array($result_print_defaults) ) {
 
 
 #get custom field labels for biller
-$biller_custom_field_label1 = get_custom_field_label(biller_cf1);
-$biller_custom_field_label2 = get_custom_field_label(biller_cf2);
-$biller_custom_field_label3 = get_custom_field_label(biller_cf3);
-$biller_custom_field_label4 = get_custom_field_label(biller_cf4);
+$biller_custom_field_label1 = get_custom_field_label(biller_cf1,'.');
+$biller_custom_field_label2 = get_custom_field_label(biller_cf2,'.');
+$biller_custom_field_label3 = get_custom_field_label(biller_cf3,'.');
+$biller_custom_field_label4 = get_custom_field_label(biller_cf4,'.');
 #get custom field labels for the customer
-$customer_custom_field_label1 = get_custom_field_label(customer_cf1);
-$customer_custom_field_label2 = get_custom_field_label(customer_cf2);
-$customer_custom_field_label3 = get_custom_field_label(customer_cf3);
-$customer_custom_field_label4 = get_custom_field_label(customer_cf4);
+$customer_custom_field_label1 = get_custom_field_label(customer_cf1,'.');
+$customer_custom_field_label2 = get_custom_field_label(customer_cf2,'.');
+$customer_custom_field_label3 = get_custom_field_label(customer_cf3,'.');
+$customer_custom_field_label4 = get_custom_field_label(customer_cf4,'.');
+#product custom fields
+$prod_custom_field_label1 = get_custom_field_label(product_cf1,'.');
+$prod_custom_field_label2 = get_custom_field_label(product_cf2,'.');
+$prod_custom_field_label3 = get_custom_field_label(pruduct_cf3,'.');
+$prod_custom_field_label4 = get_custom_field_label(product_cf4,'.');
+
 
 
 #START INVOICE HERE - TOP SECTION
@@ -413,19 +419,26 @@ else if ( $_GET['invoice_style'] === 'Itemised' || $_GET['invoice_style'] === 'C
 		<tr>
 		<td colspan=6>
 		<table>
-		<tr>
-        	        <td><b>$LANG_quantity_short</b></td><td><b>$LANG_description</b></td><td><b>$LANG_unit_price</b><td><b>$LANG_gross_total</b></td><td><b>$LANG_tax</b></td><td><b>$LANG_total_uppercase</b></td>
-	        </tr>";
+                        <tr>
+                                <td colspan=5></td>
+                                <td class='details_screen'><a href='#' align=right class=\"show-itemised\" onClick=\"$('.itemised').show();$('.show-itemised').hide();\">$LANG_show_details</a><a href='#' class=\"itemised\" onClick=\"$('.itemised').hide();$('.show-itemised').show();\">$LANG_hide_details</a> 
+                        <tr>
+			<tr>
+        		        <td><b>$LANG_quantity_short</b></td><td><b>$LANG_description</b></td><td><b>$LANG_unit_price</b><td><b>$LANG_gross_total</b></td><td><b>$LANG_tax</b></td><td><b>$LANG_total_uppercase</b></td>
+		        </tr>";
 	}
 	#show column heading for consulting style
         else if ( $_GET['invoice_style'] === 'Consulting' ) {
                 $display_block_details .=  "
 		<tr>
 		<td colspan=6>
-		<table>
-                <tr>
-                        <td><b>$LANG_quantity_short</b></td><td><b>$LANG_item</b></td><td><b>$LANG_description</b></td><td><b>$LANG_unit_price</b><td><b>$LANG_gross_total</b></td><td><b>$LANG_tax</b></td><td><b>$LANG_total_uppercase</b></td>
-                </tr>";
+		<table> 
+			<tr>
+				<td colspan=6></td>
+				<td class='details_screen'><a href='#' align=right class=\"show-consulting\" onClick=\"$('.consulting').show();$('.show-consulting').hide();\">$LANG_show_details</a><a href='#' class=\"consulting\" onClick=\"$('.consulting').hide();$('.show-consulting').show();\">$LANG_hide_details</a> 
+        	        <tr>
+               	 	       <td><b>$LANG_quantity_short</b></td><td><b>$LANG_item</b></td><td class=show-consulting><b>$LANG_description</b></td><td class='consulting'></td><td><b>$LANG_unit_price</b><td><b>$LANG_gross_total</b></td><td><b>$LANG_tax</b></td><td align=right><b>$LANG_total_uppercase</b></td>
+	                </tr>";
         }
 
 
@@ -461,6 +474,11 @@ else if ( $_GET['invoice_style'] === 'Itemised' || $_GET['invoice_style'] === 'C
                 $prod_idField = $Array['prod_id'];
                 $prod_descriptionField = $Array['prod_description'];
                 $prod_unit_priceField = $Array['prod_unit_price'];
+	        $prod_custom_field1Field = $Array['prod_custom_field1'];
+       		$prod_custom_field2Field = $Array['prod_custom_field2'];
+	        $prod_custom_field3Field = $Array['prod_custom_field3'];
+       		$prod_custom_field4Field = $Array['prod_custom_field4'];
+
 	/*
 	};
 	*/
@@ -505,6 +523,19 @@ else if ( $_GET['invoice_style'] === 'Itemised' || $_GET['invoice_style'] === 'C
 	        <tr>
 	                <td>$inv_it_quantityField</td><td>$prod_descriptionField</td><td>$pref_currency_signField$inv_it_unit_priceField</td><td>$pref_currency_signField$inv_it_gross_totalField</td><td>$pref_currency_signField$inv_it_tax_amountField</td><td>$pref_currency_signField$inv_it_totalField</td>
 	        </tr>
+                <tr  class='itemised' >       
+                        <td></td>
+				<td colspan=5>
+					<table width=100%>
+					<tr>
+						<td width=50% class='details_screen'>$prod_custom_field_label1: $prod_custom_field1Field</td><td width=50% class='details_screen'>$prod_custom_field_label2: $prod_custom_field2Field</td>
+                 			</tr>
+			                <tr class='itemised' >       
+			                       <td width=50% class='details_screen'>$prod_custom_field_label3: $prod_custom_field3Field</td><td width=50% class='details_screen'>$prod_custom_field_label4: $prod_custom_field4Field</td>
+			                 </tr>
+					</table>
+				</td>
+		</tr>
 		";
 	}	
 	#show the consulting invoice 
@@ -522,9 +553,29 @@ else if ( $_GET['invoice_style'] === 'Itemised' || $_GET['invoice_style'] === 'C
 
 	        $display_block_details .=  "
         	<tr>
-	                <td>$inv_it_quantityField</td><td>$prod_descriptionField</td><td>$stripped_item_description</td><td>$pref_currency_signField$inv_it_unit_priceField</td><td>$pref_currency_signField$inv_it_gross_totalField</td><td>$pref_currency_signField$inv_it_tax_amountField</td><td>$pref_currency_signField$inv_it_totalField</td>
-        	</tr>
-		";
+	                <td>$inv_it_quantityField</td><td>$prod_descriptionField</td><td class='show-consulting'>$stripped_item_description</td><td class='consulting'></td><td>$pref_currency_signField$inv_it_unit_priceField</td><td>$pref_currency_signField$inv_it_gross_totalField</td><td>$pref_currency_signField$inv_it_tax_amountField</td><td align=right>$pref_currency_signField$inv_it_totalField</td>
+		</tr>
+		<tr  class='consulting' >	
+                        <td></td>
+                                <td colspan=6>
+                                        <table width=100%>
+                                        <tr>
+                                                <td width=50% class='details_screen'>$prod_custom_field_label1: $prod_custom_field1Field</td><td width=50% class='details_screen'>$prod_custom_field_label2: $prod_custom_field2Field</td>
+                                        </tr>
+                                        <tr>       
+                                               <td width=50% class='details_screen'>$prod_custom_field_label3: $prod_custom_field3Field</td><td width=50% class='details_screen'>$prod_custom_field_label4: $prod_custom_field4Field</td>
+                                         </tr>
+                                        </table>
+                                </td>
+	<!--		<td></td><td colspan=6 class='details_screen consulting'>$prod_custom_field_label1: $prod_custom_field1Field, $prod_custom_field_label2: $prod_custom_field2Field, $prod_custom_field_label3: $prod_custom_field3Field, $prod_custom_field_label4: $prod_custom_field4Field</td> -->
+		 </tr>";
+		if ($inv_it_descriptionField != null) {
+			$display_block_details .=  "
+			<tr  class='consulting' >	
+				<td></td><td colspan=6 class='details_screen consulting'>$LANG_description:<br>$inv_it_descriptionField</td>
+			 </tr>
+			";
+		}
 	}
 
 
@@ -554,11 +605,17 @@ else if ( $_GET['invoice_style'] === 'Itemised' || $_GET['invoice_style'] === 'C
 			<tr>
 				<td></td>
 			</tr>
-			<tr>
-				<td><i>$LANG_notes:</i></td>
+			<tr class='details_screen'>
+				<td colspan=5><b>$LANG_notes:</b></td><td align=right class='details_screen'><a href='#' align=right class=\"show-notes\" onClick=\"$('.notes').show();$('.show-notes').hide();\">$LANG_show_details</a><a href='#' class=\"notes\" onClick=\"$('.notes').hide();$('.show-notes').show();\">$LANG_hide_details</a> 
+</td>
 			</tr>
-			<tr>
-				<td>$stripped_itemised_note</td>
+			<!-- if hide detail click - the stripped note will be displayed -->
+			<tr class='show-notes details_screen'>
+				<td colspan=6>$stripped_itemised_note</td>
+			</tr>
+			<!-- if show detail click - the full note will be displayed -->
+			<tr class='notes details_screen'>
+				<td colspan=6>$inv_noteField</td>
 			</tr>
 		";
 	}
@@ -630,6 +687,9 @@ $display_block_bottom =  "
 	  $('.show-summary').hide();
 	  $('.biller').hide();
 	  $('.customer').hide();
+	  $('.consulting').hide();
+	  $('.itemised').hide();
+	  $('.notes').hide();
   	});
     </script>
     <script type="text/javascript" src="./include/jquery.greybox.js"></script>

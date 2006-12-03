@@ -85,10 +85,10 @@ while ($Array = mysql_fetch_array($result_print_customer) ) {
 }
 
 #get custom field labels
-$customer_custom_field_label1 = get_custom_field_label(customer_cf1);
-$customer_custom_field_label2 = get_custom_field_label(customer_cf2);
-$customer_custom_field_label3 = get_custom_field_label(customer_cf3);
-$customer_custom_field_label4 = get_custom_field_label(customer_cf4);
+$customer_custom_field_label1 = get_custom_field_label(customer_cf1,'.');
+$customer_custom_field_label2 = get_custom_field_label(customer_cf2,'.');
+$customer_custom_field_label3 = get_custom_field_label(customer_cf3,'.');
+$customer_custom_field_label4 = get_custom_field_label(customer_cf4,'.');
 
 
 if ($_GET['action'] === 'view') {
@@ -391,7 +391,7 @@ Nifty("div#header,div#footer","small");
 	<script src="./include/jquery.tabs.js" type="text/javascript"></script>
 	<script type="text/javascript">//<![CDATA[
 	    $(document).ready(function() {
-		$('#container-1').tabs({fxSlide: true, fxFade: true, fxSpeed: 'fast'});
+		$('#container-1').tabs({fxFade: true, fxSpeed: 'fast'});
 		$('#trigger-tab').after('<p><a href="#" onclick="$(\'#container-1\').triggerTab(3); return false;">Activate third tab</a></p>');
 		$('#custom-tab-by-hash').title('New window').click(function() {
 		    var win = window.open(this.href, '', 'directories,location,menubar,resizable,scrollbars,status,toolbar');

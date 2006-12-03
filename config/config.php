@@ -6,10 +6,18 @@ $db_name = "simple_invoices";
 $db_user = "root";
 $db_password = "";
 
+/*mysql version. basically if your using a version less than mysql 5 some features will be disabled*/
+#$mysql = 4;
+$mysql = 5;
+
 /*Select language for Simple Invoices to use*/
-$language = "english_UK";
-#$language = "português_portuguese";
+#$language = "castellano_spanish";
+#$language = "catala_catalan";
 #$language = "deutsch_german";
+$language = "english_UK";
+#$language = "galego_galician";
+#$language = "português_portuguese";
+#$language = "suomi_finnish";
 
 /*To change the theme, enter the name of the theme folder - defalut is gree*/
 #$theme = "web2";
