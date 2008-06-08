@@ -1,5 +1,132 @@
 <?php
 
+class school_product extends product {
+
+		function insertProduct($enabled=1,$visible=1) {
+			if(isset($_POST['enabled'])) {
+				$enabled=$_POST['enabled'];
+			}
+			
+			$sql = "INSERT into
+					".TB_PREFIX."products
+				(	
+					id,
+					description,
+					unit_price,
+					custom_field1,
+					custom_field2,
+					custom_field3,
+					custom_field4,
+					notes,
+					enabled,
+					visible,
+					branch_id,
+					subject_id,
+					age,
+					level_id,
+					type,
+					status,
+					intensity,
+					start_date,
+					part_of_day,
+					start_time,
+					duration,
+					duration_type,
+					area,
+					rooms,
+					teacher_id,
+					repeat_type,
+					end_date,
+					repeat_day,
+					number_of_weeks,
+					book,
+					teaching_hours,
+					iscourse
+				)			
+				VALUES
+					(	
+						NULL,
+						'$_POST[description]',
+						'$_POST[unit_price]',
+						'$_POST[custom_field1]',
+						'$_POST[custom_field2]',
+						'$_POST[custom_field3]',
+						'$_POST[custom_field4]',
+						'$_POST[notes]',
+						'$enabled',
+						'$visible',
+						'$_POST[branch_id]',
+						'$_POST[subject_id]',
+						'$_POST[age]',
+						'$_POST[level_id]',
+						'$_POST[type]',
+						'$_POST[status]',
+						'$_POST[intensity]',
+						'$_POST[start_year]-$_POST[start_month]-$_POST[start_day]',
+						'$_POST[part_of_day]',
+						'$_POST[start_time]',
+						'$_POST[duration]',
+						'$_POST[duration_type]',
+						'$_POST[area]',
+						'$_POST[rooms]',
+						'$_POST[teacher_id]',
+						'$_POST[repeat_type]',
+						'$_POST[end_year]-$_POST[end_month]-$_POST[end_day]',
+						'$_POST[repeat_day]',
+						'$_POST[number_of_weeks]',
+						'$_POST[book]',
+						'$_POST[teaching_hours]',
+						'$_POST[iscourse]'
+					)";
+			return mysqlQuery($sql);
+		}
+
+
+	function getProducts() {
+		global $LANG;
+		
+		$sql = "SELECT * FROM ".TB_PREFIX."products WHERE visible = 1 AND iscourse = 0 ORDER BY description";
+		$query = mysqlQuery($sql) or die(mysql_error());
+		
+		$products = null;
+		
+		for($i=0;$product = mysql_fetch_array($query);$i++) {
+			
+			if ($product['enabled'] == 1) {
+				$product['enabled'] = $LANG['enabled'];
+			} else {
+				$product['enabled'] = $LANG['disabled'];
+			}
+
+			$products[$i] = $product;
+		}
+		
+		return $products;
+	}
+
+	function getCourses() 
+	{
+		global $LANG;
+		
+		$sql = "SELECT * FROM ".TB_PREFIX."products WHERE visible = 1 AND iscourse = 1 ORDER BY description";
+		$query = mysqlQuery($sql) or die(mysql_error());
+		
+		$products = null;
+		
+		for($i=0;$product = mysql_fetch_array($query);$i++) {
+			
+			if ($product['enabled'] == 1) {
+				$product['enabled'] = $LANG['enabled'];
+			} else {
+				$product['enabled'] = $LANG['disabled'];
+			}
+
+			$products[$i] = $product;
+		}
+		
+		return $products;
+	}
+}
 class school_student extends customer {
 
 	function insertCustomer() {
@@ -215,8 +342,46 @@ class school_student extends customer {
 		*/	
 }
 
+class school_enrol
+{
+	function getStudentEnrollment($student_id)
+	{
+		global $LANG;
+		
+		//$sql = "SELECT * FROM ".TB_PREFIX."course_enrol WHERE student_id = ".$student_id." ORDER BY course_id";
+		$sql = "select e.student_id, p.id, b.name as branch_name , s.name as subject_name, p.age, l.name as level_name, p.type, p.status, p.start_date, start.reason as start_reason, e.dropped_date, dropped.reason as dropped_reason from ".TB_PREFIX."invoice_items e, ".TB_PREFIX."products p, ".TB_PREFIX."subject s, ".TB_PREFIX."branch b, ".TB_PREFIX."level l, ".TB_PREFIX."course_start_reason start, ".TB_PREFIX."course_dropped_reason dropped where e.product_id = p.id and p.subject_id = s.id and p.branch_id =b.id and p.level_id = l.id and e.dropped_reason_id = dropped.id and e.start_reason_id = start.id and e.student_id = ".$student_id."";
+		//$query = mysqlQuery($sql) or die(mysql_error());
+		//$query = mysql_fetch_object(mysqlQuery($sql));
+ 
 
+		return sql2array($sql);
+	}
+}
 
+class school_invoice extends invoice{
+
+		
+		function insertinvoiceitem($invoice_id,$quantity,$product_id,$tax_id,$description="", $student_id, $start_reason_id, $dropped_reason_id, $dropped_date) 
+		{
+		
+			global $LANG;
+			$tax = gettaxrate($tax_id);
+			$product = getproduct($product_id);
+			//print_r($product);
+			$actual_tax = $tax['tax_percentage']  / 100 ;
+			$total_invoice_item_tax = $product['unit_price'] * $actual_tax;
+			$tax_amount = $total_invoice_item_tax * $quantity;
+			$total_invoice_item = $total_invoice_item_tax + $product['unit_price'] ;	
+			$total = $total_invoice_item * $quantity;
+			$gross_total = $product['unit_price']  * $quantity;
+			
+			$sql = "insert into ".TB_PREFIX."invoice_items (`invoice_id`,`quantity`,`product_id`,`unit_price`,`tax_id`,`tax`,`tax_amount`,`gross_total`,`description`,`total`,`student_id`,`start_reason_id`,`dropped_reason_id`,`dropped_date`) values ($invoice_id,$quantity,$product_id,$product[unit_price],'$tax[tax_id]',$tax[tax_percentage],$tax_amount,$gross_total,'$description',$total, '$student_id', '$start_reason_id', '$dropped_reason_id', '$dropped_date')";
+
+			//echo $sql;
+			return mysqlQuery($sql);
+
+		}
+}
 
 function year()
 {

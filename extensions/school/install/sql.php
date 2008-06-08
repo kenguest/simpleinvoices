@@ -66,36 +66,43 @@ $patch['school']['3']['patch'] = "
 "; 
 }
 $patch['school']['3']['date'] = "20080325";
+
+
 /*
 CREATE TABLE `si_course_dropped_reason` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `reason` VARCHAR( 255 ) NOT NULL
 )
-*/
-/*
+
+
 insert into si_course_dropped_reason values (null,'N/A');
 insert into si_course_dropped_reason values (null,'Stopped');
 insert into si_course_dropped_reason values (null,'Dropped Out/Discontunied Ed');
 insert into si_course_dropped_reason values (null,'Illness/Injury');
 insert into si_course_dropped_reason values (null,'Graduated');
-*/
 
-/*
+
+
 insert into si_course_start_reason values (null,'N/A');
 insert into si_course_start_reason values (null,'New Student');
 insert into si_course_start_reason values (null,'Re-Entry after Dropping Out');
-*/
-/*
+
+
 create table si_course_enrol ( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , course_id INT NOT NULL , student_id INT NOT NULL);
-ALTER TABLE `si_course_enrol` ADD `dropped_reaon_id` INT( 11 ) NULL DEFAULT NULL ;
+ALTER TABLE `si_course_enrol` ADD `start_reason_id` INT( 11 ) NULL DEFAULT NULL ;
+ALTER TABLE `si_course_enrol` ADD `dropped_reason_id` INT( 11 ) NULL DEFAULT NULL ;
+ALTER TABLE `si_course_enrol` ADD `dropped_date` DATE NULL; 
+ALTER TABLE `si_course_enrol` ADD `start_date` DATE NULL; 
+ALTER TABLE `si_course_enrol` ADD `invoice_id` INT( 11 ) NULL DEFAULT NULL; 
+ALTER TABLE `si_course_enrol` ADD `invoice_item_id` INT( 11 ) NULL DEFAULT NULL; 
 
-*/
 
-/*
+
+
 create table si_student_relation ( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , relation VARCHAR(255) NOT NULL);
-*/
 
-/*
+
+
 insert into si_student_relation values (null,'N/A');
 insert into si_student_relation values (null,'Mother');
 insert into si_student_relation values (null,'Father');
@@ -104,9 +111,9 @@ insert into si_student_relation values (null,'Uncle');
 insert into si_student_relation values (null,'Grand Mother');
 insert into si_student_relation values (null,'Grand Father');
 insert into si_student_relation values (null,'Guardian');
-*/
 
-/*
+
+
 ALTER TABLE `si_customers` ADD `place_of_enrolment` INT( 255 ) NULL ,
 ADD `place_of_lesson` INT( 11 ) NULL ,
 ADD `date` DATE NULL ,
@@ -118,9 +125,9 @@ ADD `passport_number` VARCHAR( 255 ) NULL ,
 ADD `passport_issued_at` VARCHAR( 255 ) NULL ,
 ADD `passport_issued_on` DATE NULL ;
 
-*/
 
-/*
+
+
 ALTER TABLE 
 	`si_customers` 
 		ADD `guardian1_relationship` VARCHAR(11) NOT NULL AFTER `id`, 
@@ -146,7 +153,6 @@ ALTER TABLE
 		ADD `guardian2_passport_issued_on` DATE NULL AFTER `guardian2_passport_issued_at`, 
 		ADD `guardian2_address` VARCHAR(255) NULL AFTER `guardian2_passport_issued_on`
 ;
-*/
 
 
 
@@ -154,57 +160,58 @@ ALTER TABLE
 
 
 
-/*TEST DATA
-//branches
+
+-- TEST DATA
+-- branches
 insert into si_branch value (null,'Moscow');
 insert into si_branch value (null,'Stalingrad');
 
-*/
 
-/*
-CREATE TABLE `si_course` (
-`id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`description` VARCHAR( 255 ) NOT NULL ,
-`branch_id` INT( 11 ) NOT NULL ,
-`subject_id` INT( 11 ) NOT NULL ,
-`age` VARCHAR( 255 ) NULL ,
-`level_id` INT( 11 ) NULL ,
-`type` VARCHAR( 255 ) NULL ,
-`status` VARCHAR( 255 ) NULL ,
-`intensity` VARCHAR( 255 ) NULL ,
-`start_date` DATE NULL ,
-`time` VARCHAR( 255 ) NULL ,
-`duration` VARCHAR( 255 ) NULL ,
-`duration_type` VARCHAR( 255 ) NULL ,
-`area` VARCHAR( 255 ) NULL ,
-`rooms` VARCHAR( 255 ) NULL ,
-`teacher_id` INT( 11 ) NULL ,
-`repeat_type` VARCHAR( 255 ) NULL ,
-`end_date` DATE NULL ,
-`repeat_day` VARCHAR( 255 ) NULL ,
-`number_of_weels` INT( 11 ) NULL ,
-`book` VARCHAR( 255 ) NULL ,
-`teaching_hours` VARBINARY( 255 ) NULL
+
+
+ALTER TABLE `si_products` (
+ADD `branch_id` INT( 11 ) NULL ,
+ADD `subject_id` INT( 11 ) NULL ,
+ADD `age` VARCHAR( 255 ) NULL ,
+ADD `level_id` INT( 11 ) NULL ,
+ADD `type` VARCHAR( 255 ) NULL ,
+ADD `status` VARCHAR( 255 ) NULL ,
+ADD `intensity` VARCHAR( 255 ) NULL ,
+ADD `start_date` DATE NULL ,
+ADD `part_of_day` VARCHAR( 255 ) NULL ,
+ADD `start_time` VARCHAR( 255 ) NULL ,
+ADD `duration` VARCHAR( 255 ) NULL ,
+ADD `duration_type` VARCHAR( 255 ) NULL ,
+ADD `area` VARCHAR( 255 ) NULL ,
+ADD `rooms` VARCHAR( 255 ) NULL ,
+ADD `teacher_id` INT( 11 ) NULL ,
+ADD `repeat_type` VARCHAR( 255 ) NULL ,
+ADD `end_date` DATE NULL ,
+ADD `repeat_day` VARCHAR( 255 ) NULL ,
+ADD `number_of_weeks` INT( 11 ) NULL ,
+ADD `book` VARCHAR( 255 ) NULL ,
+ADD `teaching_hours` VARCHAR ( 255 ) NULL,
+ADD `iscourse` INT( 1 ) NOT NULL DEFAULT '0'  
 )
-*/
 
 
-/*
+
+
 CREATE TABLE `si_teacher` (
 `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `last_name` VARCHAR( 255 ) NULL ,
 `first_name` VARCHAR( 255 ) NULL ,
 `middle_name` VARCHAR( 255 ) NULL ,
 `place_of_registration` INT( 11 ) NULL ,
-`palce_of_lesson` BIGINT( 11 ) NULL ,
+`place_of_lesson` BIGINT( 11 ) NULL ,
 `date` DATE NULL ,
 `birthday` DATE NULL ,
 `gender` VARCHAR( 255 ) NULL ,
 `passport_number` VARCHAR( 255 ) NULL ,
 `passport_issued_at` VARCHAR( 255 ) NULL ,
 `passport_issued_on` DATE NULL ,
-`street` VARCHAR( 255 ) NULL ,
-`street2` VARCHAR( 255 ) NULL ,
+`street_address` VARCHAR( 255 ) NULL ,
+`street_address2` VARCHAR( 255 ) NULL ,
 `city` VARCHAR( 255 ) NULL ,
 `post_code` VARCHAR( 255 ) NULL ,
 `state` VARCHAR( 255 ) NULL ,
@@ -224,9 +231,9 @@ CREATE TABLE `si_teacher` (
 
 
 
-*/
 
-/*
+
+
 CREATE TABLE `si_level` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 255 ) NOT NULL
@@ -280,9 +287,9 @@ NULL , 'A2'
 NULL , 'B1'
 );
 
-*/
 
-/*
+
+
 CREATE TABLE `si_subject` (
 `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 `name` VARCHAR( 255 ) NOT NULL
@@ -311,6 +318,14 @@ NULL , 'Greek'
 ), (
 NULL , 'Russian for Foreigners'
 );
+
+ALTER TABLE `si_invoice_items` ADD `student_id` INT( 11 ) NULL DEFAULT NULL);
+ALTER TABLE `si_invoice_items` ADD `start_reason_id` INT( 11 ) NULL DEFAULT NULL ;
+ALTER TABLE `si_invoice_items` ADD `dropped_reason_id` INT( 11 ) NULL DEFAULT NULL ;
+ALTER TABLE `si_invoice_items` ADD `dropped_date` DATE NULL; 
+
+
+create table si_certificate ( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY , course_id INT NOT NULL , name VARCHAR( 255 ) NOT NULL);
 
 */
 

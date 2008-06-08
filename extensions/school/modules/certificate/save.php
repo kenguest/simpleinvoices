@@ -13,15 +13,13 @@ $saved = false;
 
 if (  $op === 'insert_product' ) {
 	
-	$insertProductClass = new school_product;
-	if($id = $insertProductClass->insertProduct()) {
- 		$saved = true;
-// 		saveCustomFieldValues($_POST['categorie'],mysql_insert_id());
- 	}
+	$sql = "insert into ".TB_PREFIX."certificate (id, name) VALUES (NULL,'$_POST[name]')";
+	// Execute our query
+	if (mysqlQuery($sql)) $saved=true;
 }
 
 if ($op === 'edit_product' ) {
-	$insertProductClass = new school_product;
+	$insertProductClass = new product;
 	if (isset($_POST['save_product']) && $insertProductClass->updateProduct()) {
 		$saved = true;
 //		updateCustomFieldValues($_POST['categorie'],$_GET['id']);
@@ -71,7 +69,7 @@ else if (  $op === 'edit_product' ) {
 $refresh_total = isset($refresh_total) ? $refresh_total : '&nbsp';
 
 
-$pageActive = "course";
+$pageActive = "products";
 //$smarty->assign('pageActive', $pageActive);
 $smarty->assign('saved',$saved);
 //$smarty -> assign('display_block',$display_block); 
