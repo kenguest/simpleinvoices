@@ -68,9 +68,8 @@ $smarty -> assign("biller",$biller);
 $smarty -> assign("customer",$customer);
 $smarty -> assign("invoice_type",$invoice_type);
 $smarty -> assign("invoice",$invoice);
-$smarty -> assign("word_processor",$word_processor);
-$smarty -> assign("spreadsheet",$spreadsheet);
 $smarty -> assign("customerAccount",$customerAccount);
+$smarty -> assign("config",$config);
 
 
 ?>
