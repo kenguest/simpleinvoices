@@ -82,6 +82,7 @@
 			<td>
 				<input type=checkbox name=include_online_payment[] value='paypal'>{$LANG.paypal}
 				<input type=checkbox name=include_online_payment[] value='eway_merchant_xml'>{$LANG.eway_merchant_xml}
+				<input type=checkbox name=include_online_payment[] value='ach'>{$LANG.ach_payment}
 			</td>
 		</tr>
 <tr>

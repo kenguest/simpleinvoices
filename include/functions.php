@@ -604,6 +604,16 @@ function antiCSRFHiddenInput($action = 'all', $userid = false)
     return '<input type="hidden" name="csrfprotectionbysr" value="'.htmlsafe(siNonce($action, $userid)).'" />';
 }
 
+function base64_url_encode($input)
+{
+    return strtr(base64_encode($input), '+/=', '-_,');
+}
+
+function base64_url_decode($input)
+{
+    return base64_decode(strtr($input, '-_,', '+/='));
+}
+
 /*function addCSRFToken($matches)
 {
     if(!preg_match('/method=[\'"]?post[\'"\s>]/i', $action[0])) //post only

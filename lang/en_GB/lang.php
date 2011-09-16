@@ -18,6 +18,7 @@ regex :%s/;/ /1/;// 1\/\/1/g - remove the spaces
 #all
 $LANG['about'] = "About";//1
 $LANG['account_info'] = "Account Info";//1
+$LANG['ach_payment'] = "ACH Payment";//1
 $LANG['actions'] = "Actions";//1
 $LANG['add'] = "Add";//1
 $LANG['add_biller'] = "Add Biller";//1
